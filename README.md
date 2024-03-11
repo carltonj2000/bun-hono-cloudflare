@@ -11,6 +11,7 @@ bun run deploy
 bun run wrangler d1 create bun-hono-cloudflare-d1
 bun run wrangler d1 execute bun-hono-cloudflare-d1 --file=./schema.sql
 bun run wrangler d1 execute bun-hono-cloudflare-d1 --local --file=./schema.sql
+bun run wrangler d1 execute bun-hono-cloudflare-d1 --local --command="select * from customers"
 ```
 
 ## Code History

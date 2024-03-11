@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-
-import { customers } from "./db";
+import { rawCssString } from "hono/css";
 
 type BindingsT = {
   DB: D1Database;
@@ -19,15 +18,18 @@ app.get("/secret", (c) => {
   return c.json(c.env.SECRET);
 });
 
-app.get("/customers", (c) => {
-  console.log({ MY_VARIABLE: c.env.MY_VARIABLE });
+app.get("/customers", async (c) => {
+  const query = await c.env.DB.prepare("select * from customers").all();
+  const customers = query.results;
   return c.json(customers);
 });
 
-app.get("/customers/:id", (c) => {
+app.get("/customers/:id", async (c) => {
   const id = c.req.param("id");
-  const customer = customers.find((c) => c.id.toString() === id);
-  if (!customer) return c.json({});
+  const query = await c.env.DB.prepare("select * from customers where id=?")
+    .bind(id)
+    .all();
+  const customer = query.results;
   return c.json(customer);
 });
 
